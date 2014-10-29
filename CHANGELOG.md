@@ -16,6 +16,12 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2637](https://github.com/CocoaPods/CocoaPods/pull/2637)
 
+* Add a 'private' mode to the linter that skips warnings that are only
+  appropriate for public specification.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#190](https://github.com/CocoaPods/Core/issues/190)
+  [CocoaPods#2682](https://github.com/CocoaPods/CocoaPods/issues/2682)
+
 ##### Bug Fixes
 
 * Fixes an issue when finding a `Source` based on the spec-repo's `git` URL

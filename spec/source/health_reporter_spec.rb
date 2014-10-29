@@ -7,7 +7,7 @@ module Pod
       WebMock::API.stub_request(:head, /banana-corp.local/).to_return(:status => 200)
       WebMock::API.stub_request(:head, /github.com/).to_return(:status => 200)
       @repo = fixture('spec-repos/test_repo')
-      @subject = Source::HealthReporter.new(@repo)
+      @subject = Source::HealthReporter.new(@repo, true)
     end
 
     #-------------------------------------------------------------------------#

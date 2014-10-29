@@ -7,12 +7,21 @@ module Pod
       #
       attr_reader :source
 
+      # @return [Boolean] Whether attributes that affect only public sources
+      #         should be skipped.
+      #
+      attr_reader :private_mode
+      alias_method :private?, :private_mode
+
       # @param  [Pathname] repo @see Source#repo.
       #
-      def initialize(repo)
+      # @param  [Boolean] private_mode @see #private_mode
+      #
+      def initialize(repo, private_mode)
         @source = Source.new(repo)
         @errors = {}
         @linter_results = {}
+        @private_mode = private_mode
       end
 
       public
@@ -84,7 +93,7 @@ module Pod
       # @return [Nil] If the specifications raised during evaluation.
       #
       def lint_spec(name, version, spec_path)
-        linter = Specification::Linter.new(spec_path)
+        linter = Specification::Linter.new(spec_path, private?)
         linter.lint
         linter.results.each do |result|
           type = result.type == :error ? :error : :warning

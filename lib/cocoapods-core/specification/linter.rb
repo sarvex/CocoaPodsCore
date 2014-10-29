@@ -20,10 +20,21 @@ module Pod
 
       attr_reader :results
 
+      # @return [Boolean] Whether attributes that affect only public sources
+      #         should be skipped.
+      #
+      attr_reader :private_mode
+      alias_method :private?, :private_mode
+
       # @param  [Specification, Pathname, String] spec_or_path
       #         the Specification or the path of the `podspec` file to lint.
       #
-      def initialize(spec_or_path)
+      # @param  [Boolean] private_mode
+      #         whether attributes that affect only public specifications should
+      #         be skipped. @see #private_mode
+      #
+      def initialize(spec_or_path, private_mode = false)
+        @private_mode = private_mode
         if spec_or_path.is_a?(Specification)
           @spec = spec_or_path
           @file = @spec.defined_in_file
@@ -344,7 +355,7 @@ module Pod
               results.add_warning '[github_sources] Github repositories ' \
               'should end in `.git`.'
             end
-            unless git_uri.scheme == 'https'
+            unless git_uri.scheme == 'https' && !private?
               results.add_warning '[github_sources] Github repositories ' \
                 'should use an `https` link.'
             end
@@ -355,7 +366,7 @@ module Pod
       # Performs validations related to SSH sources
       #
       def check_git_ssh_source(s)
-        if git = s[:git]
+        if !private? && git = s[:git]
           if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
             results.add_warning '[source] Git SSH URLs will NOT work for ' \
               'people behind firewalls configured to only allow HTTP, ' \
